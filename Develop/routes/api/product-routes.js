@@ -3,19 +3,53 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 
 // The `/api/products` endpoint
 
-// get all products
-router.get('/', (req, res) => {
+// GET all products
+router.get('/', async (req, res) => {
   // find all products
   // be sure to include its associated Category and Tag data
+  try {
+    const productData = await Product.findAll(
+      {
+        include: [{ 
+          model: Category, 
+          attributes: ['id', 'category_id']
+        }]
+      },
+      {
+        include: [{ 
+          model: Tag, 
+          attributes: ['id', 'tag_id']
+        }]
+      }
+    );
+    res.status(200).json(productData);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
-// get one product
-router.get('/:id', (req, res) => {
+// GET one product
+router.get('/:id', async (req, res) => {
   // find a single product by its `id`
   // be sure to include its associated Category and Tag data
+  try {
+    const productData =  await Product.findByPk(req.params.id, {   
+      // JOIN with Tag, using the Category through table
+      include: [{ model: Tag, through: Category, as: 'product_id' }]  //tag_id?
+    });
+
+    if (!productData) {
+      res.status(404).json({ message: 'No product found with this id!' });
+      return;
+    }
+
+    res.status(200).json(productData);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
-// create new product
+// CREATE new product
 router.post('/', (req, res) => {
   /* req.body should look like this...
     {
@@ -45,9 +79,10 @@ router.post('/', (req, res) => {
       console.log(err);
       res.status(400).json(err);
     });
-});
+  },
 
-// update product
+
+// UPDATE (PUT) product
 router.put('/:id', (req, res) => {
   // update product data
   Product.update(req.body, {
@@ -87,10 +122,26 @@ router.put('/:id', (req, res) => {
       // console.log(err);
       res.status(400).json(err);
     });
-});
+}));
 
-router.delete('/:id', (req, res) => {
-  // delete one product by its `id` value
+// DELETE one product by its `id` value
+router.delete('/:id', async (req, res) => {
+  try {
+    const productData = await Product.destroy({
+      where: {
+        id: req.params.id
+      }
+    });
+
+    if (!productData) {
+      res.status(404).json({ message: 'No product found with this id!' });
+      return;
+    }
+
+    res.status(200).json(productData);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 module.exports = router;
