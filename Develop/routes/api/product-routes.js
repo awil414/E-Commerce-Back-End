@@ -29,11 +29,11 @@ router.get('/', async (req, res) => {
 });
 
 // GET one product
-router.get('/:id', async (req, res) => {
+router.get('/:id', (req, res) => {
   // find a single product by its `id`
   // be sure to include its associated Category and Tag data
   try {
-    const productData =  await Product.findByPk(req.params.id, {   
+    const productData =  Product.findByPk(req.params.id, {   
       // JOIN with Tag, using the Category through table
       include: [{ model: Tag, through: Category, as: 'product_id' }]  //tag_id?
     });
