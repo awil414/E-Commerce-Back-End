@@ -12,15 +12,14 @@ router.get('/', async (req, res) => {
       {
         include: [{ 
           model: Category, 
-          attributes: ['id', 'category_id'] //  IS THIS RIGHT???
+          attributes: ['id', 'category_name'] //  IS THIS RIGHT???
+        },
+        { 
+          model: Tag, 
+          through: ProductTag, 
+          attributes: ['id', 'tag_name']
         }]
       },
-      {
-        include: [{ 
-          model: Tag, 
-          attributes: ['id', 'tag_id']
-        }]
-      }
     );
     res.status(200).json(productData);
   } catch (err) {
@@ -29,14 +28,22 @@ router.get('/', async (req, res) => {
 });
 
 // GET one product
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   // find a single product by its `id`
   // be sure to include its associated Category and Tag data
   try {
-    const productData =  Product.findByPk(req.params.id, {   
-      // JOIN with Tag, using the Category through table
-      include: [{ model: Tag, through: Category, foreignKey: 'product_id' }]  //tag_id?
-    });
+    const productData =  await Product.findByPk(req.params.id, {
+      include: [{ 
+        model: Category, 
+        attributes: ['id', 'category_name'] //  IS THIS RIGHT???
+      },
+      { 
+        model: Tag, 
+        through: ProductTag, 
+        attributes: ['id', 'tag_name']
+      }]
+    }
+    );
 
     if (!productData) {
       res.status(404).json({ message: 'No product found with this id!' });
