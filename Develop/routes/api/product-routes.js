@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
       {
         include: [{ 
           model: Category, 
-          attributes: ['id', 'category_id']
+          attributes: ['id', 'category_id'] //  IS THIS RIGHT???
         }]
       },
       {
@@ -35,7 +35,7 @@ router.get('/:id', (req, res) => {
   try {
     const productData =  Product.findByPk(req.params.id, {   
       // JOIN with Tag, using the Category through table
-      include: [{ model: Tag, through: Category, as: 'product_id' }]  //tag_id?
+      include: [{ model: Tag, through: Category, foreignKey: 'product_id' }]  //tag_id?
     });
 
     if (!productData) {
@@ -90,7 +90,7 @@ router.put('/:id', (req, res) => {
       id: req.params.id,
     },
   })
-    .then((product) => {
+    .then((product) => {  // WHY GRAYED OUT?
       // find all associated tags from ProductTag
       return ProductTag.findAll({ where: { product_id: req.params.id } });
     })

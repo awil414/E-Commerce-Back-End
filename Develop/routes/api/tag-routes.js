@@ -61,7 +61,7 @@ router.put('/:id', (req, res) => {
       }
     });
 
-    if (!tagData) {
+    if (!tagData) { // SHOULD THERE BE A [0] here?
       res.status(404).json({ message: 'No tag found with this id!' });
       return;
     }
