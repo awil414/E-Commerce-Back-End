@@ -16,10 +16,10 @@ The E-Commerce Backend is a REST API for an internet retail website. The API is 
 ## Installation
 The necessary dependencies to install are:
 
-mysql2
-sequelize
-dotenv
-express
+* mysql2
+* sequelize
+* dotenv
+* express
 
 ## Usage
 To finish the application set-up, complete the following steps:
