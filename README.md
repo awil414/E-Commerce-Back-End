@@ -26,7 +26,9 @@ The necessary dependencies to install are:
 ## Usage
 To finish the application set-up, complete the following steps:
 
-Create a MySQL database on your local machine using the schema.sql file located in the /db/ directory (From the MySQL CLI, source db/schema.sql) Then, seed the database with sample data to be used for testing purposes(run 'npm run seed' from inside the root directory of the project.)
+* Create a MySQL database on your local machine using the schema.sql file located in the /db/ directory (From the MySQL CLI, source db/schema.sql) 
+* Seed the database with sample data to be used for testing purposes(run 'npm run seed' from inside the root directory of the project.)
+
 Now you're ready to start the application! You can start the server by running:
 
 npm start
