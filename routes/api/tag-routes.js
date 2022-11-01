@@ -5,7 +5,7 @@ const { Tag, Product, ProductTag } = require('../../models');
 
 // GET all tags
 router.get('/', async (req, res) => {
-  // be sure to include its associated Product data
+ 
   try {
     const tagData =  await Tag.findAll( 
       {
@@ -22,12 +22,13 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-  // find a single tag by its `id`
-  // be sure to include its associated Product data
+  // Find a single tag by its `id`
+ 
   try {
     const tagData =  await Tag.findByPk(req.params.id, {   
       // JOIN with Product, using the ProductTag through table
-      include: [{ model: Product }]  
+      include: [{ model: Product,
+      attributes: ['product_name', 'price', 'stock', 'category_id'] }]  
     });
 
     if (!tagData) {
@@ -45,7 +46,9 @@ router.get('/:id', async (req, res) => {
 // CREATE (POST) a new tag
 router.post('/', async (req, res) => {
   try {
-    const tagData = await Tag.create(req.body);
+    const tagData = await Tag.create(
+    { tag_name: req.body.tag_name }
+    );
     res.status(200).json(tagData);
   } catch (err) {
     res.status(400).json(err);
@@ -61,7 +64,7 @@ router.put('/:id', async (req, res) => {
       }
     });
 
-    if (!tagData) { // SHOULD THERE BE A [0] here?
+    if (!tagData[0]) { 
       res.status(404).json({ message: 'No tag found with this id!' });
       return;
     }

@@ -16,18 +16,18 @@ Category.hasMany(Product, {
   onDelete: 'CASCADE', 
 });
 
-// Products belongToMany Tags (through ProductTag)
+// Products belongToMany Tags 
 Product.belongsToMany(Tag, {
-  // Define the third table needed to store the foreign keys
+  // Define sthe third table needed to store the foreign keys
   through: {
     model: ProductTag,
     unique: false  
   },
-  // Define an foreignKey for when data is retrieved
+  // Defines a foreignKey for when data is retrieved
   foreignKey: 'product_id' 
 });
 
-// Tags belongToMany Products (through ProductTag)
+// Tags belongToMany Products 
 Tag.belongsToMany(Product, {
   through: {
     model: ProductTag,
